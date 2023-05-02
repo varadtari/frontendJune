@@ -1,0 +1,9 @@
+.calender.LocalizationProvider{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: -webkit-fill-available;
+}
+  
+  

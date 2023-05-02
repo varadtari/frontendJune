@@ -1,0 +1,28 @@
+.sidebar{
+    height: 100%;
+   
+}
+
+.link{
+    text-decoration: 0;
+}
+.logout [type="submit"]{
+    border: 3;
+    background: #7f5feb;
+    color: #080808;
+    border-radius: 30px;
+    width: 80px;
+    height: 35px;
+    font-size: 16px;
+    font-weight: 750;
+    margin-bottom: 20px;
+    transition: 0.9s;
+    cursor: pointer;
+    text-decoration: 0;
+    text-align: center;
+}
+
+.logout {
+    margin-top: 35vh;
+
+}
