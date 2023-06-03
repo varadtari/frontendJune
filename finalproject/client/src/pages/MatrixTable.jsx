@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Space } from "antd";
 import Axios from "axios";
 import { add } from "date-fns";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 
 
 export default function MatrixTable({ tableData,setGeneratedData }) {
@@ -28,7 +29,8 @@ export default function MatrixTable({ tableData,setGeneratedData }) {
   // const handleOptionChange1 = (event) => {
   //   setSelectedOption1(event.target.value);
   // };
-  const [addSkill, setAddSkill] = useState([]);
+  const [skillList,setSkillList]=useState([]);
+  
  const handleSkill=(skill,index)=>{
   let temp={...tableData[index],skills:skill}
   tableData[index]=temp
@@ -37,7 +39,7 @@ export default function MatrixTable({ tableData,setGeneratedData }) {
  const getSkillData=async()=>{
   let skillData=await Axios.get("http://localhost:4000/api/skills")
   console.log("test",skillData);
-  setAddSkill(skillData.data.data);
+  setSkillList(skillData.data.data);
  }
  useEffect(()=>{getSkillData()},[])
   return (
@@ -64,7 +66,7 @@ export default function MatrixTable({ tableData,setGeneratedData }) {
             <tbody>
               {tableData &&
                 tableData.map((data, index) => (
-                  <MatrixTableRow data={data} index={index} handleSkill={handleSkill} addSkill={addSkill}/>
+                  <MatrixTableRow data={data} index={index} handleSkill={handleSkill} skillList={skillList}/>
                 ))}
             </tbody>
           </table>
@@ -74,13 +76,16 @@ export default function MatrixTable({ tableData,setGeneratedData }) {
   );
 }
 
-function MatrixTableRow({ data, index,handleSkill,addSkill}) {
+function MatrixTableRow({ data, index,handleSkill,skillList}) {
   const [showExtra, setShowExtra] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const[selectedSkill,setSelectedSkill]=useState({});
+  const[selectedSkill,setSelectedSkill]=useState(null);
+  const [selectedLevel,setSelectedLevel]=useState(null);
 
-  const handleSubmit=()=>{
-    let tempSkills=[...(data.skills || []),{skill:selectedOption,level:selectedOption1}]
+  const handleSubmit=async()=>{
+    let tempSkills=[...(data.skills || []),{skill:selectedSkill,level:selectedLevel}]
+   let response=await Axios.put(`http://localhost:4000/api/excels/updateUser/${data._id}`,{skills:tempSkills})
+   
     handleSkill(tempSkills,index)
   };
 
@@ -94,13 +99,18 @@ function MatrixTableRow({ data, index,handleSkill,addSkill}) {
   const handleOptionChange1 = (event) => {
     // setSelectedOption1(event.target.value);
     setSelectedSkill(event.target.value);
-    console.log("",event.target.value);
+    console.log("testskill",event.target.value);
   };
-  const handleSkillUpdate=(skills,currentIndex)=>{
+  const handleSkillUpdate=async(skills,currentIndex)=>{
     let tempSkills=data.skills
     tempSkills[currentIndex]=skills
+    let response=await Axios.put(`http://localhost:4000/api/excels/updateUser/${data._id}`,{skills:tempSkills})
+ 
     handleSkill(tempSkills,index)
   }
+  useEffect(()=>{
+console.log("skill", selectedSkill);
+  },[selectedSkill])
  
   return (
     <>
@@ -111,7 +121,7 @@ function MatrixTableRow({ data, index,handleSkill,addSkill}) {
         <td>{data["EMP CODE"]}</td>
         <td>{data["EDUCATION"]}</td>
         <td>{data["CONTRACTOR"]}</td>
-        <td>{data?.skills?.length ?data.skills.map(skill=><p>{skill.skill+`(${skill.level})`}</p>):"No Skills"}</td>
+        <td>{data?.skills?.length ?data.skills?.map(skill=><p>{skill.skill+`(${skill.level})`}</p>):"No Skills"}</td>
         <td>
           <button style={{ height: "42px" }} onClick={() => setShowExtra(!showExtra)}>
             {showExtra ? (
@@ -123,49 +133,55 @@ function MatrixTableRow({ data, index,handleSkill,addSkill}) {
         </td>
       </tr> 
       {showExtra && data?.skills?.length && (
-        data.skills.map((currentSkill,currentIndex)=><UpdateSkill currentSkill={currentSkill} index={currentIndex} handleSkillUpdate={handleSkillUpdate}/>)
+        data.skills?.map((currentSkill,currentIndex)=><UpdateSkill skillList={skillList}  currentSkill={currentSkill} index={currentIndex} handleSkillUpdate={handleSkillUpdate}/>)
       )}
       {showExtra && (
         <tr>
           <td colSpan="7">
             <div style={{ display: "flex" }}>
-              <div>
-                <select value={selectedOption} onChange={handleOptionChange1}>
-                  <option value="">Skill Level</option>
-                  {/* <option value="Under Training"> 1-Under Training</option>
-                  <option value="Trained and can work under observation">
-                    2-Trained and can work under observation{" "}
-                  </option>
-                  <option value="Can work independently">
-                    {" "}
-                    3-Can work independently
-                  </option>
-                  <option value="Can trained others">
-                    {" "}
-                    4-Can trained others
-                  </option> */}
-                {
-                  selectedOption?.skill_level?.map((data)=><option value={data}>{data.name}</option>)
-                }
-                </select>
-                <p>Skill Level: {selectedOption}</p>
-              </div>
+           
+            <FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">Select Skill</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={selectedSkill}
+    label="Age"
+    onChange={(e)=>setSelectedSkill(e.target.value)}
+  >{skillList?.map((data)=><MenuItem value={data.skill_name}>{data.skill_name}</MenuItem>) }
+    
+  </Select>
+</FormControl>
 
-              <div style={{ marginLeft: "70px" }}>
+{
+  selectedSkill?
+  <FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">Select Level</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={selectedLevel}
+    label="Age"
+    onChange={(e)=>setSelectedLevel(e.target.value)}
+  >{skillList.filter(item=>{console.log("check", item.skill_name== selectedSkill);return item.skill_name==selectedSkill})?.[0]?.skill_level?.map((data)=><MenuItem value={data.level}>{data.level}</MenuItem>) }
+    
+  </Select>
+</FormControl>
+:null
+}
+
+              {/* <div style={{ marginLeft: "70px" }}>
                 {" "}
                 <select value={selectedSkill} onChange={handleOptionChange1}>
                 <option value="">Select Skill</option>
-                  {/* <option value="">Select Skill</option>
-                  <option value="Skill-1"> Skill-1</option>
-                  <option value="Skill-2">Skill-2 </option>
-                  <option value="Skill-3"> Skill-3</option>
-                  <option value="Skill-4"> Skill-4</option> */}
+
                   {
-                    addSkill.map((data)=><option value={data}>{data.skill_name}</option>)
+                    skillList?.map((data)=><option value={data}>{data.skill_name}</option>)
                   }
                 </select>
                 <p> Skill Name: {selectedOption1}</p>
               </div>
+            */}
               <div style={{ marginLeft: "110px", color: "green" }}>
                 <button onClick={handleSubmit}
                   style={{
@@ -186,41 +202,38 @@ function MatrixTableRow({ data, index,handleSkill,addSkill}) {
     </>
   );
 }
-const UpdateSkill=({currentSkill,index,handleSkillUpdate})=>{
+const UpdateSkill=({currentSkill,index,handleSkillUpdate,skillList})=>{
+  const[updatedSkill,setUpdatedSkill]=useState(currentSkill)
   const[level,setLevel]=useState(currentSkill.level)
   const[skill,setSkill]=useState(currentSkill.skill)
+  useEffect(()=>{ 
+    let temp =skillList.filter(item=>item.skill_name==skill)
+    console.log("test6",skill,temp)
+    setUpdatedSkill(temp?.[0])
+  },[skill])
   return <tr>
   <td colSpan="7">
     <div style={{ display: "flex" }}>
       <div>
-        <select value={currentSkill.skill} onChange={e =>setSkill(e.target.value)}>
-          <option value="">Skill Level</option>
-          <option value="Under Training"> 1-Under Training</option>
-          <option value="Trained and can work under observation">
-            2-Trained and can work under observation{" "}
-          </option>
-          <option value="Can work independently">
-            {" "}
-            3-Can work independently
-          </option>
-          <option value="Can trained others">
-            {" "}
-            4-Can trained others
-          </option>
+        <select value={skill} disabled onChange={e =>setSkill(e.target.value)}>
+         { skillList.map((item)=><option value={item.skill_name}>
+          {  item.skill_name}
+          </option>)}
+          
         </select>
-        <p>Skill Level: {level}</p>
+        <p>Skill Name: {skill}</p>
       </div>
 
       <div style={{ marginLeft: "70px" }}>
         {" "}
-        <select value={currentSkill.level} onChange={e =>setLevel(e.target.value)}>
-          <option value="">Select Skill</option>
-          <option value="Skill-1"> Skill-1</option>
-          <option value="Skill-2">Skill-2 </option>
-          <option value="Skill-3"> Skill-3</option>
-          <option value="Skill-4"> Skill-4</option>
+        <select value={level} onChange={e =>setLevel(e.target.value)}>
+          <option value="">Select Level</option>
+          { updatedSkill?.skill_level?.map((item)=><option value={item.level}>
+          {  item.level}
+          </option>)}
+          
         </select>
-        <p> Skill Name: {skill}</p>
+        <p> Skill Level: {level}</p>
       </div>
       <div style={{ marginLeft: "110px", color: "green" }}>
         <button onClick={()=>handleSkillUpdate({skill,level},index)}

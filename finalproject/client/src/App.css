@@ -84,3 +84,22 @@ tr {
   text-align: center;
   background-color: rgba(0, 0, 0, 0.50);
 }
+.custom-dropdown{
+  position: relative;
+  width: 150px;
+
+}
+ .custom-dropdown .cd-list{
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: white;
+    z-index: 10;
+    display: none;
+    width: 100%;
+    
+  }
+  
+ .custom-dropdown .open{
+  display: block;
+ }

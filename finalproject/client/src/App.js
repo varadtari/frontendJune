@@ -13,8 +13,11 @@ import Induction from "./pages/Induction";
 
 
 
+
 import Matrix from "./pages/Matrix";
 import MatrixTable from "./pages/MatrixTable";
+import Svalidation from "./pages/Svalidation";
+import Fvalidation from "./pages/Fvalidation";
 
 
 const App = () => {
@@ -54,6 +57,8 @@ const App = () => {
             <Route path="Dataentry" element={<Layout><Dataentry /> </Layout>} />
             <Route path="Validation" element={<Layout><Matrix /></Layout>} />
             <Route path="View" element={<Layout><View /></Layout>} />
+            <Route path="Svalidation" element={<Layout><Svalidation /></Layout>} />
+            <Route path="Fvalidation" element={<Layout><Fvalidation /></Layout>} />
           </Route>
         </Routes>
         {/* <Route path="/" element={<Dashboard />} /> */}

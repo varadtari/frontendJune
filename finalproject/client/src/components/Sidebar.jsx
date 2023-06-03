@@ -50,6 +50,16 @@ const Sidebar = ({ children }) => {
       name: "View",
       icon: <FaThList />,
     },
+    {
+      path: "/Dashboard/Svalidation",
+      name: "S.Validation",
+      icon: <FaCheckCircle />,
+    },
+    {
+      path: "/Dashboard/Fvalidation",
+      name: "F.Validation",
+      icon: <FaCheckCircle />,
+    },
   ];
   return (
     <div className="">
