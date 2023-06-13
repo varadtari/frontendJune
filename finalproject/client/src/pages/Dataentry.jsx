@@ -3,19 +3,21 @@ import MaterialTable from "material-table";
 import XLSX from "xlsx";
 import Axios from "axios";
 
+
 const EXTENSIONS = ["xlsx", "xls", "csv"];
 function Dataentry() {
   const [colDefs, setColDefs] = useState();
-  const [
-    data, setData] = useState();
+  const [data, setData] = useState();
   let fileData;
   let finalData;
+
 
   const getExention = (file) => {
     const parts = file.name.split(".");
     const extension = parts[parts.length - 1];
     return EXTENSIONS.includes(extension); // return boolean
   };
+
 
   const convertToJson = (headers, data) => {
     const rows = [];
@@ -29,6 +31,7 @@ function Dataentry() {
     return rows;
   };
 
+
   const importExcel = (e) => {
     const file = e.target.files[0];
     console.log("file1", file);
@@ -37,7 +40,9 @@ function Dataentry() {
     reader.onload = (event) => {
       //parse data
 
+
       const bstr = event.target.result;
+
 
       const workBook = XLSX.read(bstr, {
         type: "binary",
@@ -49,6 +54,7 @@ function Dataentry() {
       //get first sheet
       const sheet_namelist = workBook.SheetNames;
 
+
       //convert to array
       //console.log("data 2", workSheet);
       fileData = XLSX.utils.sheet_to_json(workBook.Sheets[sheet_namelist[x]], {
@@ -59,9 +65,11 @@ function Dataentry() {
       // console.log(fileData)
       const headers = fileData[0];
 
+
       const heads = headers.map((head) => ({ title: head, field: head }));
       setColDefs(heads);
       console.log("data 4", headers);
+
 
       //removing header
       fileData.splice(0,1);
@@ -73,8 +81,8 @@ function Dataentry() {
           DateJoin: `${dataOne.DOJ?.valueOf() || new Date().valueOf()}`,
           DOJ: `${dataOne.DOJ?.toLocaleDateString('en-US', { month: 'short', year: 'numeric', day: 'numeric' })}`,
         };
-        
-        
+       
+       
       });
       finalData = finalData.filter((dataTwo) => {
         if (dataTwo.Dept) return true;
@@ -83,11 +91,13 @@ function Dataentry() {
       console.log("data 7", finalData);
       setData(finalData);
 
+
       console.log("data 5", fileData);
       //adding to database...
       //alert("varad boi");
       // console.log("data",fileData);
     };
+
 
     if (file) {
       if (getExention(file)) {
@@ -118,7 +128,7 @@ function Dataentry() {
         width: "100%",
         height: "100%",
         marginTop: "50px",
-        padding: "12px 20px", 
+        padding: "12px 20px",
        
       }}
       className="App"
@@ -129,12 +139,14 @@ function Dataentry() {
         style={{
           fontSize: "15px",
 
+
           cursor: "pointer",
         }}
         type="file"
         onChange={importExcel}
       />
      
+
 
       <MaterialTable
         title=""
@@ -156,6 +168,7 @@ function Dataentry() {
               setData([...dataUpdate]);
               console.log("full updated data", dataUpdate);
 
+
               setTimeout(() => resolve(), 500);
             }),
           onRowDelete: (oldData) =>
@@ -166,6 +179,7 @@ function Dataentry() {
                 dataDelete.splice(index, 1);
                 setData([...dataDelete]);
                 console.log("datadeleted", dataDelete);
+
 
                 console.log("final updated data", data);
                 resolve();
@@ -192,7 +206,7 @@ function Dataentry() {
           backgroundColor: "#008CBA",
           cursor: "pointer",
           marginTop:"20px"
-          
+         
         }}
         onClick={importToDatabase}
       >
@@ -202,5 +216,8 @@ function Dataentry() {
   );
 }
 
+
 export default Dataentry;
 //`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`
+
+

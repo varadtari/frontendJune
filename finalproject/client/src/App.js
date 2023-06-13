@@ -18,6 +18,7 @@ import Matrix from "./pages/Matrix";
 import MatrixTable from "./pages/MatrixTable";
 import Svalidation from "./pages/Svalidation";
 import Fvalidation from "./pages/Fvalidation";
+import SkillForm from "./pages/Skillform";
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login/>} />
+          <Route path="/Skillform" element={<SkillForm/>} />
   
           <Route path="/Matrix" element={<Matrix/>} />     
           <Route path="/Dashboard" >
