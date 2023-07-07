@@ -13,16 +13,22 @@ const SkillForm = () => {
       skill_name: skillName,
       skill_level:  [
         {
-          "level": "3",
-          "name": "level 3"
+          "level": "4.Can train others",
+          "name": "Can train others"
+        },
+       
+       
+        {
+          "level": "3.Can work independently",
+          "name": "Can work independently"
         },
         {
-          "level": "2",
-          "name": "level 2"
+          "level": "2.Trained and can work under observation",
+          "name": "Trained and can work under observation"
         },
         {
-          "level": "1",
-          "name": "level 1"
+          "level": "1.Under Training",
+          "name": "Under Training"
         }
       ],
       dept: dept,

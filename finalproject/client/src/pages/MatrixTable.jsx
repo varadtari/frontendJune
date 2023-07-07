@@ -59,7 +59,7 @@ export default function MatrixTable({ tableData,setGeneratedData }) {
                 <th>Employee Name</th>
                 <th>Emp Code</th>
                 <th>Qualification</th>
-                <th>Company</th>
+                <th>Department</th>
                 <th>Skills</th>
               </tr>
             </thead>
@@ -120,7 +120,7 @@ console.log("skill", selectedSkill);
         <td>{data["EMPLOYEE NAME"]}</td>
         <td>{data["EMP CODE"]}</td>
         <td>{data["EDUCATION"]}</td>
-        <td>{data["CONTRACTOR"]}</td>
+        <td>{data["Dept"]}</td>
         <td>{data?.skills?.length ?data.skills?.map(skill=><p>{skill.skill+`(${skill.level})`}</p>):"No Skills"}</td>
         <td>
           <button style={{ height: "42px" }} onClick={() => setShowExtra(!showExtra)}>

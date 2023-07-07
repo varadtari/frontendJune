@@ -93,5 +93,6 @@ const options = [
   { value: "FO", show: "FO" },
   { value: "STORE", show: "STORE" },
   { value: "power", show: "power" },
+  { value: "AUTOMOTIVE", show: "AUTOMOTIVE" },
 ];
 export default Matrix;

@@ -12,7 +12,7 @@ export default function Svalidation() {
           userData=userData.filter(item =>!item.readyForValidation).map((item)=>{//filter condition =>item.readyForValidation, & no need of map
             let skillsDone=0
             item?.skills?.forEach((skill)=>{
-                if(skill.level==2)
+                if(skill.level=="2.Trained and can work under observation")
                 skillsDone=skillsDone+1
             })
             return {...item,readyForValidationTemp:!!item.skills?.length && item.skills?.length==skillsDone}
@@ -40,14 +40,12 @@ console.error("error", error);
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Validated level 3</th>
-                <th>Validated level 4</th>
+                <th>Approval</th>
             </tr>
             {
                 userList.map((obj, count) =><tr>
                     <td>{count}</td>
                     <td>{obj["EMPLOYEE NAME"]}</td>
-                    <td>{obj.readyForValidationTemp?<input onChange={(e)=>{handleApproval(e,obj)}} className='' type='checkbox'/>:null}</td>
                     <td>{obj.readyForValidationTemp?<input onChange={(e)=>{handleApproval(e,obj)}} className='' type='checkbox'/>:null}</td>
                     {/* no need of conditional renderring */}
                 </tr>)
