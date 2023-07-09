@@ -31,7 +31,7 @@ const SkillForm = () => {
           "name": "Under Training"
         }
       ],
-      dept: dept,
+      Dept: dept,
     };
     // Call your backend API to save the data (e.g., using Axios, fetch, etc.)
     // Example:
