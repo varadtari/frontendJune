@@ -51,7 +51,7 @@ const Sidebar = ({ children }) => {
       icon: <FaThList />,
     },
     {
-      path: "/Dashboard/Svalidation",
+      path: "/Dashboard/Pvalidation",
       name: "S.Validation",
       icon: <FaCheckCircle />,
     },

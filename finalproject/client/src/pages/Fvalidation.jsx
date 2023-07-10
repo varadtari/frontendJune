@@ -5,42 +5,42 @@ export default function Fvalidation() {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    // Load the checkbox state from local storage on component mount
     const storedUserList = JSON.parse(localStorage.getItem('userList'));
     setUserList(storedUserList || []);
+  }, []);
+
+  useEffect(() => {
+    generate();
   }, []);
 
   async function generate() {
     try {
       let response = await Axios.get('http://localhost:4000/api/excels/filter');
       let userData = response.data.data;
-      userData = userData.filter((item) => item.readyForValidation);
+      userData = userData.filter((item) => item.readyForValidation && item.validated);
       setUserList(userData);
-      // Save the updated checkbox state to local storage
       localStorage.setItem('userList', JSON.stringify(userData));
     } catch (error) {
       console.error('error', error);
     }
   }
 
-  useEffect(() => {
-    generate();
-  }, []);
-
   async function handleApproval(e, user) {
     try {
-      // Update the validated field in the user object
-      user.validated = e.target.checked;
+      const updatedUser = {
+        ...user,
+        validated: e.target.checked,
+      };
+
       setUserList((prevUserList) => {
-        // Update the userList state with the modified user object
-        const updatedUserList = prevUserList.map((obj) => (obj._id === user._id ? user : obj));
-        // Save the updated checkbox state to local storage
-        localStorage.setItem('userList', JSON.stringify(updatedUserList));
-        return updatedUserList;
+        const updatedList = prevUserList.map((obj) => (obj._id === user._id ? updatedUser : obj));
+        localStorage.setItem('userList', JSON.stringify(updatedList));
+        return updatedList;
       });
 
-      // Send the updated user object to the backend API
-      await Axios.put(`http://localhost:4000/api/excels/updateUser/${user._id}`, { validated: user.validated });
+      await Axios.put(`http://localhost:4000/api/excels/updateUser/${user._id}`, {
+        validated: updatedUser.validated,
+      });
     } catch (error) {
       console.error('error', error);
     }
@@ -53,7 +53,7 @@ export default function Fvalidation() {
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Approval</th>
+            <th>Validation</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@ export default function Fvalidation() {
                   onChange={(e) => handleApproval(e, obj)}
                   className=""
                   type="checkbox"
-                  checked={obj.validated} // Bind the checkbox state to the validated field
+                  checked={obj.validated}
                 />
               </td>
             </tr>

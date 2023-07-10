@@ -16,7 +16,7 @@ import Induction from "./pages/Induction";
 
 import Matrix from "./pages/Matrix";
 import MatrixTable from "./pages/MatrixTable";
-import Svalidation from "./pages/Svalidation";
+import Pvalidation from "./pages/Pvalidation";
 import Fvalidation from "./pages/Fvalidation";
 import SkillForm from "./pages/Skillform";
 
@@ -59,7 +59,7 @@ const App = () => {
             <Route path="Dataentry" element={<Layout><Dataentry /> </Layout>} />
             <Route path="Validation" element={<Layout><Matrix /></Layout>} />
             <Route path="View" element={<Layout><View /></Layout>} />
-            <Route path="Svalidation" element={<Layout><Svalidation /></Layout>} />
+            <Route path="Pvalidation" element={<Layout><Pvalidation /></Layout>} />
             <Route path="Fvalidation" element={<Layout><Fvalidation /></Layout>} />
           </Route>
         </Routes>

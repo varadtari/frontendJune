@@ -5,7 +5,7 @@ import Dataentry from "./Dataentry";
 import Training from "./Training";
 import Validation from "./Validation";
 import View from "./View";
-import Svalidation from "./Svalidation"
+
 
 const Dashboard = () => {
   return (
