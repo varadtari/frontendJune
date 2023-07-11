@@ -79,8 +79,9 @@ function Dataentry() {
         return {
           ...dataOne,
           DateJoin: `${dataOne.DOJ?.valueOf() || new Date().valueOf()}`,
-          DOJ: `${dataOne.DOJ?.toLocaleDateString('en-US', { month: 'short', year: 'numeric', day: 'numeric' })}`,
+          DOJ: `${dataOne.DOJ?.toLocaleDateString('en-GB')}`,
         };
+        
        
        
       });

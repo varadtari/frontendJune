@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 
@@ -19,8 +20,7 @@ export default function Pvalidation() {
         return {
           ...item,
           readyForValidationTemp: item.skills.length > 0 && item.skills.length === skillsDone.length,
-          validated: false,
-         
+          validated: item.validated || false,
         };
       });
       setUserList(userData);
@@ -30,10 +30,22 @@ export default function Pvalidation() {
       console.error('error', error);
     }
   }
+  
 
   useEffect(() => {
+    // Load the checkbox state from local storage on component mount
+    const storedUserList = JSON.parse(localStorage.getItem('userList'));
+    // if (storedUserList) {
+    //   const updatedUserList = storedUserList.map((user) => ({
+    //     ...user,
+    //     validated: user.validated || false,
+    //     readyForValidationTemp: user.readyForValidationTemp || false,
+    //   }));
+    //   setUserList(updatedUserList);
+    // }
     generate();
   }, []);
+  
 
   async function handleSValidation(e, user) {
     try {
@@ -88,7 +100,7 @@ export default function Pvalidation() {
               <td>{count}</td>
               <td>{obj['EMPLOYEE NAME']}</td>
               <td>
-                {obj.skills.some((skill) => skill.level === '2.Trained and can work under observation'|| skill.level === '3.Can work independently') ? (
+                {obj.skills.some((skill) => skill.level === '2.Trained and can work under observation') ? (
                   <input
                     onChange={(e) => handleSValidation(e, obj)}
                     type="checkbox"
@@ -96,7 +108,7 @@ export default function Pvalidation() {
                   />
                 ) : (
                   <input
-                    onChange={(e) => handleSValidation(e, obj)}
+                    // onChange={(e) => handleSValidation(e, obj)}
                     type="checkbox"
                     checked={false}
                     disabled
@@ -116,5 +128,7 @@ export default function Pvalidation() {
   );
   
 }
+
+
 
 
