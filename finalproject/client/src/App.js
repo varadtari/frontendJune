@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Training from "./pages/Training.jsx";
@@ -7,7 +7,9 @@ import Dataentry from "./pages/Dataentry";
 import Validation from "./pages/Validation.jsx";
 import View from "./pages/View.jsx";
 import Layout from "./components/Layout";
-import Login from "./pages/Login";
+import Login, { isSupervisor } from "./pages/Login";
+// import Login, { isTrainer } from "./pages/Login";
+// import Login, { isManager } from "./pages/Login";
 import Register from "./pages/Register";
 import Induction from "./pages/Induction";
 
@@ -22,6 +24,7 @@ import SkillForm from "./pages/Skillform";
 
 
 const App = () => {
+ 
   return (
     <div>
       <Header />
@@ -53,14 +56,14 @@ const App = () => {
             />
             {/* <Route path="Training" element={<Layout><Training /></Layout>} /> */}
             <Route path="Training"> 
-            <Route path="" element={<Layout><Training /></Layout>} />
+            <Route path="" element={(!isSupervisor())?<Layout><Training /></Layout>:null} />
               <Route path=":dept" element={<Layout><Induction/></Layout>}/>
             </Route>
-            <Route path="Dataentry" element={<Layout><Dataentry /> </Layout>} />
-            <Route path="Validation" element={<Layout><Matrix /></Layout>} />
-            <Route path="View" element={<Layout><View /></Layout>} />
-            <Route path="Pvalidation" element={<Layout><Pvalidation /></Layout>} />
-            <Route path="Fvalidation" element={<Layout><Fvalidation /></Layout>} />
+            <Route path="Dataentry" element={<Layout>{(!isSupervisor())?<Dataentry />:null}</Layout>} />
+            <Route path="Validation" element={(!isSupervisor())?<Layout><Matrix /></Layout>:null} />
+            <Route path="View" element={(!isSupervisor())?<Layout><View /></Layout>:null} />
+            <Route path="Pvalidation" element={<Layout><Pvalidation /></Layout>}/>
+            <Route path="Fvalidation" element={(!isSupervisor())?<Layout><Fvalidation /></Layout>:null} />
           </Route>
         </Routes>
         {/* <Route path="/" element={<Dashboard />} /> */}

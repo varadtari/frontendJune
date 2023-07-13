@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import generatePDF from "./generatePDF";
+import Format from "./Format1";
+import axios from "axios";
 
-export default function DisplayTable({ tableData, title }) {
+export default function DisplayTable({ id,tableData, title }) {
+  const [data, setData] = useState(tableData);
+
+  const handleCheckboxChange = (id, isChecked) => {
+    
+    const updatedTableData = data.map((dataItem) =>
+      dataItem.id === id ? { ...dataItem, hasCheckbox: isChecked } : dataItem
+    );
+    setData(updatedTableData);
+  };
+
+  const saveToDatabase = () => {
+    // Extract the signature checkbox state from the table data
+    const employeeSignatures = data.map((dataItem) => ({
+      id: dataItem.id,
+      hasCheckbox: dataItem.hasCheckbox || false,
+    }));
+
+    // Extract the id from the first data item (assuming it exists)
+    const id = data.length > 0 ? data[0].id : "";
+
+    // Make an API call to save the checkbox state in the database
+    axios
+      .post(`http://localhost:4000/api/excels/check/${id}`, { employeeSignatures })
+      .then((response) => {
+        console.log("Employee signatures saved successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error saving employee signatures:", error);
+      });
+  };
+
   return (
     <div>
       <button onClick={generatePDF} className="btn my-6">
@@ -19,48 +52,48 @@ export default function DisplayTable({ tableData, title }) {
         >
           <div className="img">
             <img
-              style={{ maxWidth: "80%", marginLeft: "100px", }}
+              style={{ maxWidth: "80%", marginLeft: "100px" }}
               src={title ? title : process.env.PUBLIC_URL + "/images/heads.png"}
+              alt=""
             />
           </div>
           <table>
             <tr>
-              <th>
-                &nbsp;&nbsp;&nbsp;&nbsp;Participant&nbsp;&nbsp;&nbsp;&nbsp;
-              </th>
-              <th>
-                {" "}
-                &nbsp;&nbsp;&nbsp;&nbsp;Area of
-                Operation&nbsp;&nbsp;&nbsp;&nbsp;{" "}
-              </th>
-              <th>
-                &nbsp;Employee <br />
-                Signature&nbsp;&nbsp;
-              </th>
-              <th>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;&nbsp;&nbsp;&nbsp;
-              </th>
-              <th>
-                &nbsp;&nbsp;&nbsp;&nbsp;Trainer Name and Signature&nbsp;&nbsp;
-              </th>
+              <th>Participant</th>
+              <th>Area of Operation</th>
+              <th>Employee Signature</th>
+              <th>Date</th>
+              <th>Trainer Name and Signature</th>
             </tr>
-            {tableData &&
-              tableData.map((data) => (
-                <tr>
-                  <td>{data["EMPLOYEE NAME"]}</td>
-                  <td>{data.Dept}</td>
-                  <td>{<input type="checkbox"></input>}</td>
-                  <td>{data.DOJ}</td>
-                  <td>{data[""]}</td>
+            {data &&
+              data.map((dataItem) => (
+                <tr key={dataItem.id}>
+                  <td>{dataItem["EMPLOYEE NAME"]}</td>
+                  <td>{dataItem.Dept}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                     checked ={dataItem.hasCheckbox}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          dataItem.id,
+                          dataItem.hasCheckbox
+                        )
+                      }
+                    />
+                  </td>
+                  <td>{dataItem.DOJ}</td>
+                  <td>{dataItem["TRAINER"]}</td>
                 </tr>
               ))}
           </table>
-          
         </Typography>
-        <br/>
-        <div>RFB00960/05.19/V1.2</div>
+        <br />
+        <div>
+          <Format />
+        </div>
+        <button onClick={saveToDatabase}>Save</button>
       </Container>
-      {/* <PdfComponent /> */}
     </div>
   );
 }

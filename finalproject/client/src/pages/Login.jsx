@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "./Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import { setUser } from "../App";
+
+
 
 const Login = ({ setLoginUser }) => {
   const navigate = useNavigate();
@@ -10,6 +13,7 @@ const Login = ({ setLoginUser }) => {
     email: "",
     password: "",
   });
+  
 
   const authenticate = async () => {
     let user = userData.find((obj) => {
@@ -30,6 +34,7 @@ const Login = ({ setLoginUser }) => {
       alert("Wrong credentials");
     }
   };
+  
 
   // const [user, setUser] = useState({
   //   email: "",
@@ -83,11 +88,11 @@ const Login = ({ setLoginUser }) => {
               setDetails({ ...details, password: e.target.value })
             }
           />
-           <select id='selectsuccess' className='box' name='designation' >
+          <select onChange={(e)=>{setUser(e.target.value)}} id='selectsuccess' className='box' name='designation' >
             <option selected>--Select Role--</option>
-            <option value="Option1">Trainer</option>
-            <option value="Option2">Manager</option>
-            <option value="Option3">Supervisor</option>
+            <option value={0}>Trainer</option>
+            <option value={1}>Supervisor</option>
+            <option value={2}>Manager</option>
           </select>
         </div>
         <div className="button mt-5">
@@ -99,8 +104,24 @@ const Login = ({ setLoginUser }) => {
     </div>
   );
 };
+const setUser=(value)=>{
+  localStorage.setItem("user",value);
+  
+}
+export const isTrainer=()=>{
+return localStorage.getItem("user")==0;
+}
+export const isManager=()=>{
+  return localStorage.getItem("user")==2;
+  }
+  export const isSupervisor=()=>{
+    return localStorage.getItem("user")==1;
+    }
 
 export default Login;
+console.log("isTrainer value",isTrainer())
+console.log("isSupervisor value",isSupervisor())
+console.log("isManager value",isManager())
 
 const userData = [
   {
