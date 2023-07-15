@@ -202,9 +202,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
                             }}
                             />
                           )}
-                          {skills.approve && isTrainer() ? (
-                            <button>Approve</button>
-                          ) : null}
+                          
                         </div>
                       );
                     })}

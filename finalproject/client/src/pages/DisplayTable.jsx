@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import generatePDF from "./generatePDF";
@@ -8,6 +8,7 @@ import axios from "axios";
 export default function DisplayTable({ tableData, title }) {
   const [data, setData] = useState(tableData);
   const [signature,setSignature]=useState(false);
+  const [formatNumber, setFormatNumber] = useState('');
     async function handleCheckboxChange  (id, isChecked) {
       console.log("ids",isChecked);
       setSignature(isChecked);
@@ -43,7 +44,16 @@ export default function DisplayTable({ tableData, title }) {
   
       
     };
-  
+    useEffect(() => {
+      // Fetch the format number from the backend API
+      axios.get('http://localhost:4000/api/excels/format')
+        .then((response) => {
+          setFormatNumber(response.data.formatNumber);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, []);
   
 
   const saveToDatabase = () => {
@@ -104,7 +114,11 @@ export default function DisplayTable({ tableData, title }) {
         </Typography>
         <br />
         <div>
-          <Format />
+          {/* <Format /> */}
+          
+        
+        <span>{formatNumber}</span>
+      
         </div>
         <button onClick={saveToDatabase}>Save</button>
       </Container>
