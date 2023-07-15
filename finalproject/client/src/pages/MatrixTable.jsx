@@ -5,11 +5,15 @@ import { Button, Space } from "antd";
 import Axios from "axios";
 import { add } from "date-fns";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 
 export default function MatrixTable({ tableData, setGeneratedData }) {
   const [skillList, setSkillList] = useState([]);
   const [searchByNameQuery, setSearchByNameQuery] = useState("");
-
+  const Navigate = useNavigate();
+  const handleSkillFormClick = () => {
+    Navigate("/skillForm");
+  };
   const handleSkill = (skill, index) => {
     let temp = { ...tableData[index], skills: skill };
     tableData[index] = temp;
@@ -28,12 +32,23 @@ export default function MatrixTable({ tableData, setGeneratedData }) {
   return (
     <div>
       <Container maxWidth="">
+
         <Typography
           style={{
             backgroundColor: "white",
             border: "1px solid black",
           }}
         >
+          <button onClick={handleSkillFormClick} style={{
+            position:"absolute",
+            
+            background: "",
+            padding:"1px",
+            marginRight:"620px",
+            right: "2px",
+          }} >
+            Open Skill Form
+          </button>
           <input
             type="text"
             value={searchByNameQuery}

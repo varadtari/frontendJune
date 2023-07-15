@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,useState, } from "react";
 import ElementMaker from "./ElementMaker";
 
 
@@ -9,7 +9,7 @@ class App extends Component {
       fullName: { text: "", showInputEle: false },
     };
   }
-
+  
 
   componentDidMount() {
     const storedText = localStorage.getItem("fullNameText");

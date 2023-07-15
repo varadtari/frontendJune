@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from "react";
 import "./App.css";
+import Login from "./pages/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Training from "./pages/Training.jsx";
 import Header from "./components/Header";
@@ -7,9 +8,8 @@ import Dataentry from "./pages/Dataentry";
 import Validation from "./pages/Validation.jsx";
 import View from "./pages/View.jsx";
 import Layout from "./components/Layout";
-import Login, { isSupervisor } from "./pages/Login";
-// import Login, { isTrainer } from "./pages/Login";
-// import Login, { isManager } from "./pages/Login";
+import  { isSupervisor,isTrainer } from "./pages/Login";
+ 
 import Register from "./pages/Register";
 import Induction from "./pages/Induction";
 
@@ -21,10 +21,20 @@ import MatrixTable from "./pages/MatrixTable";
 import Pvalidation from "./pages/Pvalidation";
 import Fvalidation from "./pages/Fvalidation";
 import SkillForm from "./pages/Skillform";
+import FormatForm from "./pages/Formatform";
 
 
 const App = () => {
- 
+  const [access, setAcesss] = useState([0]);
+
+  useEffect(() => {
+    const storedUserList = JSON.parse(localStorage.getItem('user'));
+    setAcesss(storedUserList || []);
+    
+  
+    
+
+  }, [isTrainer(),isSupervisor()]);
   return (
     <div>
       <Header />
@@ -32,7 +42,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login/>} />
           <Route path="/Skillform" element={<SkillForm/>} />
-  
+          <Route path="/Formatform" element={<FormatForm/>} />
           <Route path="/Matrix" element={<Matrix/>} />     
           <Route path="/Dashboard" >
             <Route

@@ -4,6 +4,9 @@ import React from "react";
 function ElementMaker(props) {
   const { showInputEle, value, handleChange, handleDoubleClick, handleBlur } =
     props;
+   
+
+  
 
 
   return (

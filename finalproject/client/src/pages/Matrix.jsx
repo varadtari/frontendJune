@@ -89,10 +89,15 @@ const Matrix = () => {
   );
 };
 const options = [
-  { value: "", show: "all" },
+  { value: "", show: "ALL" },
   { value: "FO", show: "FO" },
   { value: "STORE", show: "STORE" },
-  { value: "power", show: "power" },
+  { value: "POWER", show: "POWER" },
+  { value: "RF", show: "RF" },
+  { value: "ENTERPRISE", show: "ENTERPRISE" },
+  { value: "OFC", show: "OFC" },
+  { value: "AISG", show: "AISG" },
   { value: "AUTOMOTIVE", show: "AUTOMOTIVE" },
+
 ];
 export default Matrix;

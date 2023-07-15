@@ -5,36 +5,50 @@ import generatePDF from "./generatePDF";
 import Format from "./Format1";
 import axios from "axios";
 
-export default function DisplayTable({ id,tableData, title }) {
+export default function DisplayTable({ tableData, title }) {
   const [data, setData] = useState(tableData);
-
-  const handleCheckboxChange = (id, isChecked) => {
-    
-    const updatedTableData = data.map((dataItem) =>
-      dataItem.id === id ? { ...dataItem, hasCheckbox: isChecked } : dataItem
-    );
-    setData(updatedTableData);
-  };
+  const [signature,setSignature]=useState(false);
+    async function handleCheckboxChange  (id, isChecked) {
+      console.log("ids",isChecked);
+      setSignature(isChecked);
+      console.log("ids2",data);
+      const updatedTableData = data.map((dataItem) =>
+        dataItem.id === id ? { ...dataItem, hasCheckbox: isChecked } : dataItem
+        
+      );
+      setData(updatedTableData);
+     
+      const employeeSignatures = data.map((dataItem) => ({
+          id: dataItem._id,
+        
+        hasCheckbox: dataItem.hasCheckbox||false,
+        
+      }));
+      console.log("idf",employeeSignatures);
+      setSignature(employeeSignatures);
+      // Extract the id from the first data item (assuming it exists)
+      //const id2 = data.length > 0 ? data[0]._id : "";
+     // console.log("idv",id2);
+  
+      // Make an API call to save the checkbox state in the database
+      let response=await axios
+        .put(`http://localhost:4000/api/excels/check/${id}`, {hasCheckbox:isChecked})
+        .then((response) => {
+          console.log("Employee signatures saved successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error saving employee signatures:", error);
+        });
+  
+  
+      
+    };
+  
+  
 
   const saveToDatabase = () => {
     // Extract the signature checkbox state from the table data
-    const employeeSignatures = data.map((dataItem) => ({
-      id: dataItem.id,
-      hasCheckbox: dataItem.hasCheckbox || false,
-    }));
 
-    // Extract the id from the first data item (assuming it exists)
-    const id = data.length > 0 ? data[0].id : "";
-
-    // Make an API call to save the checkbox state in the database
-    axios
-      .post(`http://localhost:4000/api/excels/check/${id}`, { employeeSignatures })
-      .then((response) => {
-        console.log("Employee signatures saved successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error saving employee signatures:", error);
-      });
   };
 
   return (
@@ -74,10 +88,10 @@ export default function DisplayTable({ id,tableData, title }) {
                     <input
                       type="checkbox"
                      checked ={dataItem.hasCheckbox}
-                      onChange={() =>
+                      onChange={(e) =>
                         handleCheckboxChange(
-                          dataItem.id,
-                          dataItem.hasCheckbox
+                          dataItem._id,
+                          dataItem.hasCheckbox=e.target.checked
                         )
                       }
                     />

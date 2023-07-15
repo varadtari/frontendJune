@@ -42,7 +42,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/Dashboard/Validation",
-      name: "Validation",
+      name: "Skill Matrix",
       icon: <FaCheckCircle />,
     },
     {
@@ -52,14 +52,10 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/Dashboard/Pvalidation",
-      name: "S.Validation",
+      name: "SupervisorValidation",
       icon: <FaCheckCircle />,
     },
-    {
-      path: "/Dashboard/Fvalidation",
-      name: "F.Validation",
-      icon: <FaCheckCircle />,
-    },
+   
   ];
   return (
     <div className="">

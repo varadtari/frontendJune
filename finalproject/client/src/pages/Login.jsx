@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import "./Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,7 @@ const Login = ({ setLoginUser }) => {
       alert("Wrong credentials");
     }
   };
-  
+ 
 
   // const [user, setUser] = useState({
   //   email: "",
@@ -104,7 +104,7 @@ const Login = ({ setLoginUser }) => {
     </div>
   );
 };
-const setUser=(value)=>{
+export const setUser=(value)=>{
   localStorage.setItem("user",value);
   
 }
