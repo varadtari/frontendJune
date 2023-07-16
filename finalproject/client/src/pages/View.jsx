@@ -38,7 +38,16 @@ const View = () => {
     } catch (error) {}
   }
   return (
+    
+      
     <div className="calender">
+  <h2 style={{
+          
+          background: '-webkit-linear-gradient(left, blue, red)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: "bold",
+        }}>&nbsp;&nbsp;&nbsp;VIEW</h2>
       <div className="d-flex">
         <div>
           <p>from date</p>
@@ -83,7 +92,7 @@ const View = () => {
   );
 };
 const options = [
-  { value: "", show: "ALL" },
+  { value: "", show: "All" },
   { value: "FO", show: "FO" },
   { value: "STORE", show: "STORE" },
   { value: "POWER", show: "POWER" },
@@ -91,7 +100,7 @@ const options = [
   { value: "ENTERPRISE", show: "ENTERPRISE" },
   { value: "OFC", show: "OFC" },
   { value: "AISG", show: "AISG" },
-  { value: "AUTOMOTIVE", show: "AUTOMOTIVE" },
+  { value: "AUTOMOTIVE", show: "AUTOMOTIVE" },
 
 ];
 export default View;

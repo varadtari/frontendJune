@@ -4,11 +4,17 @@ import Container from "@material-ui/core/Container";
 import generatePDF from "./generatePDF";
 import Format from "./Format1";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function DisplayTable({ tableData, title }) {
   const [data, setData] = useState(tableData);
   const [signature,setSignature]=useState(false);
   const [formatNumber, setFormatNumber] = useState('');
+  const Navigate = useNavigate();
+
+  const handleFormatFormClick = () => {
+    Navigate("/Formatform");
+  };
     async function handleCheckboxChange  (id, isChecked) {
       console.log("ids",isChecked);
       setSignature(isChecked);
@@ -64,8 +70,9 @@ export default function DisplayTable({ tableData, title }) {
   return (
     <div>
       <button onClick={generatePDF} className="btn my-6">
-        download
+        Download
       </button>
+      <button onClick={handleFormatFormClick}>Revised Format No </button>
       <Container id="report" maxWidth="">
         <Typography
           style={{
@@ -120,7 +127,7 @@ export default function DisplayTable({ tableData, title }) {
         <span>{formatNumber}</span>
       
         </div>
-        <button onClick={saveToDatabase}>Save</button>
+        
       </Container>
     </div>
   );

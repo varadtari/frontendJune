@@ -3,7 +3,6 @@ import Axios from "axios";
 
 const SkillForm = () => {
   const [skillName, setSkillName] = useState('');
- // const [skillLevel, setSkillLevel] = useState('');
   const [dept, setDept] = useState('');
 
   const handleSubmit = (event) => {
@@ -33,55 +32,103 @@ const SkillForm = () => {
       ],
       Dept: dept,
     };
-    // Call your backend API to save the data (e.g., using Axios, fetch, etc.)
-    // Example:
-    // axios.post('/api/skills', formData)
-    //   .then(response => {
-    //     // Handle success
-    //   })
-    //   .catch(error => {
-    //     // Handle error
-    //   });
-
 
     Axios.post("http://localhost:4000/api/skills", { data: formData})
     .then(() => {
-      alert("success...");
+      alert("Success!");
     })
     .catch(() => {
-      alert("Try Again ");
+      alert("Try Again");
     });
+
     // Clear the form fields after submitting
     setSkillName('');
-    //setSkillLevel('');
     setDept('');
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="skillName">Skill Name:</label>
-        <input
-          type="text"
-          id="skillName"
-          value={skillName}
-          onChange={(event) => setSkillName(event.target.value)}
-          required
-        />
-      </div>
+  const styles = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "50vh",
       
-      <div>
-        <label htmlFor="dept">Department:</label>
-        <input
-          type="text"
-          id="dept"
-          value={dept}
-          onChange={(event) => setDept(event.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    },
+    form: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      maxWidth: "400px",
+      padding: "20px",
+      border: "1px solid #ccc",
+      borderRadius: "5px",
+      background: "#f2f2f2",
+    },
+    formGroup: {
+      margin: "10px 0",
+      width: "100%",
+    },
+    label: {
+      fontWeight: "bold",
+    },
+    input: {
+      padding: "8px",
+      borderRadius: "5px",
+      border: "1px solid #ccc",
+      width: "100%",
+    },
+    button: {
+      marginTop: "20px",
+      padding: "10px 20px",
+      borderRadius: "5px",
+      border: "none",
+      background: "#2196f3",
+      color: "#fff",
+      fontWeight: "bold",
+      cursor: "pointer",
+      transition: "background-color 0.3s ease",
+    },
+    buttonHover: {
+      background: "#1976d2",
+    },
+  };
+
+  return (
+    <div style={styles.container}>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.formGroup}>
+          <label htmlFor="skillName" style={styles.label}>
+            Skill Name:
+          </label>
+          <input
+            type="text"
+            id="skillName"
+            value={skillName}
+            onChange={(event) => setSkillName(event.target.value)}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label htmlFor="dept" style={styles.label}>
+            Department:
+          </label>
+          <input
+            type="text"
+            id="dept"
+            value={dept}
+            onChange={(event) => setDept(event.target.value)}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        <button type="submit" style={styles.button}>
+          Submit
+        </button>
+      </form>
+    </div>
   );
 };
 

@@ -15,6 +15,8 @@ import MatrixTable from "./pages/MatrixTable";
 import Pvalidation from "./pages/Pvalidation";
 import Fvalidation from "./pages/Fvalidation";
 import SkillForm from "./pages/Skillform";
+import Skillwise from "./pages/Skillwise";
+import FormatForm from "./pages/Formatform";
 
 export const UserContext = React.createContext();
 
@@ -33,6 +35,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/Skillform" element={<SkillForm />} />
+            <Route path="/Skillwise" element={<Skillwise />} />
+            <Route path="/Formatform" element={<FormatForm />} />
             <Route
               path="/Dashboard"
               element={

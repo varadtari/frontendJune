@@ -8,12 +8,16 @@ import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 
 export default function MatrixTable({ tableData, setGeneratedData }) {
+
+  const Navigate = useNavigate();
+
+  const handleSkillFormClick = () => {
+    Navigate("/SkillForm");
+  };
+
   const [skillList, setSkillList] = useState([]);
   const [searchByNameQuery, setSearchByNameQuery] = useState("");
-  const Navigate = useNavigate();
-  const handleSkillFormClick = () => {
-    Navigate("/skillForm");
-  };
+
   const handleSkill = (skill, index) => {
     let temp = { ...tableData[index], skills: skill };
     tableData[index] = temp;
@@ -31,43 +35,48 @@ export default function MatrixTable({ tableData, setGeneratedData }) {
 
   return (
     <div>
-      <Container maxWidth="">
+      <br />  <br />
+      <Container maxWidth="" style={{ marginBottom: "15px" }}>
 
         <Typography
           style={{
             backgroundColor: "white",
             border: "1px solid black",
+
           }}
         >
-          <button onClick={handleSkillFormClick} style={{
-            position:"absolute",
-            
-            background: "",
-            padding:"1px",
-            marginRight:"620px",
-            right: "2px",
-          }} >
-            Open Skill Form
-          </button>
           <input
+            style={{height:"38px"}}
             type="text"
             value={searchByNameQuery}
             onChange={(e) => setSearchByNameQuery(e.target.value)}
             placeholder="Search by employee name..."
           />
 
-          <table>
+          <button style={{
+            background: "#a4afec",
+            color: "black", position: "absolute",
+            
+        
+           
+            marginRight: "620px",
+            right: "2px",
+          }} onClick={handleSkillFormClick} className="btn my-6">
+            Skill Form
+          </button>
+          <table >
             <thead>
               <tr>
-                <th>Sr No</th>
-                <th>Joining Date</th>
-                <th>Employee Name</th>
-                <th>Emp Code</th>
-                <th>Qualification</th>
-                <th>Department</th>
-                <th>Skills</th>
+                <th style={{ width: "8%", height: "60px" }}>&nbsp; Sr No</th>
+                <th style={{ width: "10%", height: "60px" }}>&nbsp;Joining Date</th>
+                <th style={{ width: "20%", height: "60px" }}>&nbsp;Employee Name</th>
+                <th style={{ width: "8%", height: "60px" }}>&nbsp;&nbsp;Emp Code</th>
+                <th style={{ width: "12%", height: "60px" }}>&nbsp;Qualification</th>
+                <th style={{ width: "12%", height: "60px" }}>&nbsp;Department</th>
+                <th style={{ width: "21%", height: "60px" }}>&nbsp;Skills</th>
               </tr>
             </thead>
+
             <tbody>
               {tableData &&
                 tableData
@@ -141,11 +150,11 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
       <tr key={index}>
         <td>{index + 1}</td>
         <td>{data.DOJ}</td>
-        <td>{data["EMPLOYEE NAME"]}</td>
+        <td >{data["EMPLOYEE NAME"]}</td>
         <td>{data["EMP CODE"]}</td>
         <td>{data["EDUCATION"]}</td>
         <td>{data["Dept"]}</td>
-        <td>
+        <td >
           {data?.skills?.length ? (
             data.skills?.map((skill) => (
               <p>
@@ -156,9 +165,22 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
             <p>No Skills</p>
           )}
         </td>
-        <td>
+        <td >
           <button
-            style={{ height: "42px" }}
+            style={{
+              height: "42px",
+              padding: "0 16px",
+              border: "none",
+              borderRadius: "5px",
+              backgroundColor: "#A9A9A9",
+              fontWeight: "bold",
+              fontSize: "16px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background-color 0.3s ease",
+            }}
             onClick={() => setShowExtra(!showExtra)}
           >
             {showExtra ? (
@@ -285,6 +307,8 @@ const UpdateSkill = ({
     <tr>
       <td colSpan="7">
         <div style={{ display: "flex" }}>
+          <div style={{ width: "25%" }}>
+          </div>
           <div>
             <select
               value={skill}
@@ -298,7 +322,7 @@ const UpdateSkill = ({
             <p>Skill Name: {skill}</p>
           </div>
 
-          <div style={{ marginLeft: "70px" }}>
+          <div style={{ width: "25%", marginLeft: "70px" }}>
             {" "}
             <select
               value={level}
@@ -311,7 +335,7 @@ const UpdateSkill = ({
             </select>
             <p> Skill Level: {level}</p>
           </div>
-          <div style={{ marginLeft: "110px", color: "green" }}>
+          <div style={{ width: "25%", marginLeft: "110px", color: "green" }}>
             <button
               onClick={() => handleSkillUpdate({ skill, level }, index)}
               style={{
@@ -325,7 +349,7 @@ const UpdateSkill = ({
               Update
             </button>
           </div>
-          <div style={{ marginLeft: "110px", color: "red" }}>
+          {/* <div style={{ width: "25%", marginLeft: "110px", color: "red" }}>
             <button
               onClick={() => handleDeleteSkill(data)}
               style={{
@@ -339,7 +363,7 @@ const UpdateSkill = ({
             >
               Delete
             </button>
-          </div>
+          </div> */}
         </div>
       </td>
     </tr>

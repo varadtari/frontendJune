@@ -43,20 +43,21 @@ const Matrix = () => {
     
     <div className="calender">
       <div>
-        <h2>SKILL MATRIX</h2>
+        <h2 style={{background: '-webkit-linear-gradient(left, blue, red)', WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent', fontWeight: "bold"}} >SKILL MATRIX</h2>
       </div>
       <div className="d-flex">
         <div>
-          <p>from date</p>
+          <p>From date</p>
           <input
             type="date"
             onChange={(e) => setDate({ ...date, startDate: e.target.value })}
             max={date.endDate}
             value={date.startDate}
           />
-        </div>
+        </div> 
         <div>
-          <p>end date</p>
+          <p>End date</p>
           <input
             disabled={!date.startDate}
             onChange={(e) => setDate({ ...date, endDate: e.target.value })}
@@ -66,8 +67,9 @@ const Matrix = () => {
           />
         </div>
       </div>
+      <br></br>
       <div>
-        <p>dept</p>
+        <p>Choose Dept</p>
         <select
           id="selectsuccess"
           className="box"
@@ -82,6 +84,7 @@ const Matrix = () => {
       <button className="mt-4" disabled={loading} onClick={generate}>
         {generated ? "Generated" : "Generate"}
       </button>
+    
       {generated && generatedData ? (
         <MatrixTable tableData={generatedData}setGeneratedData={setGeneratedData}/>
       ) : null}
@@ -89,7 +92,7 @@ const Matrix = () => {
   );
 };
 const options = [
-  { value: "", show: "ALL" },
+  { value: "", show: "All" },
   { value: "FO", show: "FO" },
   { value: "STORE", show: "STORE" },
   { value: "POWER", show: "POWER" },

@@ -5,14 +5,15 @@ import Container from "@material-ui/core/Container";
 export default function Viewtable({ tableData }) {
   return (
     <div>
+      <br/><br/>
       <Container maxWidth="">
-        <Typography
+        <Typography 
           style={{
             backgroundColor: "white",
             border: "1px solid black",
           }}
         >
-         
+          
           <table>
             <tr>
               <th>Participant</th>
@@ -28,7 +29,7 @@ export default function Viewtable({ tableData }) {
                   <td>{data.Dept}</td>
                   <td>{data["EMPLOYEE NAME"]}</td>
                   <td>{data.DOJ}</td>
-                  <td>{data["CONTRACTOR"]}</td>
+                  <td>{data["TRAINER"]}</td>
                 </tr>
               ))}
           </table>
