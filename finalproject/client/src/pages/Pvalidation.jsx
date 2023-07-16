@@ -5,7 +5,7 @@ import Container from "@material-ui/core/Container";
 import { Button, Space } from "antd";
 import { add } from "date-fns";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
-import { isTrainer } from "./Login";
+import { isTrainer } from "../App";
 
 export default function Pvalidation({ tableData, setGeneratedData, data }) {
   const [date, setDate] = useState({
@@ -202,7 +202,9 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
                             }}
                             />
                           )}
-                          
+                          {skills.approve && isTrainer() ? (
+                            <button>Approve</button>
+                          ) : null}
                         </div>
                       );
                     })}
@@ -220,4 +222,4 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
 let skilltest = [
   "3.Can work independently",
   "2.Trained and can work under observation",
-];
+]

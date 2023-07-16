@@ -89,15 +89,15 @@ const App = () => {
   );
 };
 
-const isTrainer = () => {
+export const isTrainer = () => {
   return localStorage.getItem("user") === "trainer";
 };
 
-const isManager = () => {
+ export const isManager = () => {
   return localStorage.getItem("user") === "manager";
 };
 
-const isSupervisor = () => {
+export const isSupervisor = () => {
   return localStorage.getItem("user") === "supervisor";
 };
 
