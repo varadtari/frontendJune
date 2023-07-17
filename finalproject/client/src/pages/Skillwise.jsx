@@ -10,9 +10,21 @@
 // } from "@material-ui/core";
 
 // export default function Skillwise() {
+//   const [date, setDate] = useState({
+//     startDate: "",
+//     endDate: "",
+//   });
+//   const [userList, setUserList] = useState([]);
+//   const [generated, setGenerated] = useState(false);
+//   const [loading, setLoading] = useState(false);
 //   const [skillList, setSkillList] = useState([]);
 //   const [selectedDepartment, setSelectedDepartment] = useState("");
 //   const [employees, setEmployees] = useState([]);
+//   let skilltest = [
+//     "4.Can train others",
+//     "3.Can work independently",
+//     "2.Trained and can work under observation",
+//   ];
 
 //   useEffect(() => {
 //     getSkillData();
@@ -31,53 +43,122 @@
 //     setSelectedDepartment(event.target.value);
 //   };
 
-//   const filterEmployeesByLevel = (level) => {
-//     // Filter employees based on the selected department and skill level
-//     const filteredEmployees = tableData.filter(
-//       (employee) =>
-//         employee["Dept"] === selectedDepartment &&
-//         (employee.skills?.some((skill) => skill.level === level) || false)
-//     );
-//     setEmployees(filteredEmployees);
-//   };
+//   async function generate() {
+//     try {
+//       setLoading(true);
+//       let response = await Axios.get(
+//         `http://localhost:4000/api/excels/filter?${date.startDate &&
+//           date.endDate &&
+//           `fromDate=${date.startDate}&toDate=${date.endDate}`}`
+//       );
+
+//       let userData = response.data.data;
+//       userData = userData.filter((item) => {
+//         let count = 0;
+//         item.skills.forEach((skill) => {
+//           if (
+//             skilltest.includes(skill.level) &&
+//             skill.skillId === selectedDepartment
+//           ) {
+//             count += 1;
+//           }
+//         });
+//         return count > 0;
+//       });
+
+//       setUserList(userData);
+//       setLoading(false);
+//       setGenerated(true);
+//     } catch (error) {
+//       console.error("Error generating data:", error);
+//       setLoading(false);
+//     }
+//   }
 
 //   return (
 //     <div>
-//       <Typography variant="h4">Skill View Page</Typography>
-//       <FormControl>
-//         <InputLabel id="department-label">Select Department</InputLabel>
-//         <Select
-//           labelId="department-label"
-//           value={selectedDepartment}
-//           onChange={handleDepartmentChange}
+//       <div className="calender">
+//         <h2
+//           style={{
+//             background: '-webkit-linear-gradient(left, blue, red)',
+//             WebkitBackgroundClip: 'text',
+//             WebkitTextFillColor: 'transparent',
+//             fontWeight: "bold"
+//           }}
 //         >
-//           {skillList.map((skill) => (
-//             <MenuItem key={skill.Dept} value={skill.Dept}>
-//               {skill.Dept}
-//             </MenuItem>
-//           ))}
+//           Validation
+//         </h2>
+//         <div className="d-flex">
+//           <div>
+//             <p>from date</p>
+//             <input
+//               type="date"
+//               onChange={(e) => setDate({ ...date, startDate: e.target.value })}
+//               max={date.endDate}
+//               value={date.startDate}
+//             />
+//           </div>
+//           <div>
+//             <p>end date</p>
+//             <input
+//               disabled={!date.startDate}
+//               onChange={(e) => setDate({ ...date, endDate: e.target.value })}
+//               type="date"
+//               min={date.startDate}
+//               value={date.endDate}
+//             />
+//           </div>
+//         </div>
+//         <button className="mt-4" onClick={generate} disabled={loading}>
+//           {loading ? "Generating..." : generated ? "Generated" : "Generate"}
+//         </button>
+//       </div>
+
+//       <FormControl>
+//         <InputLabel>Select Department</InputLabel>
+//         <Select value={selectedDepartment} onChange={handleDepartmentChange}>
+//           <MenuItem value="dept1">FO</MenuItem>
+//           <MenuItem value="dept2">Department 2</MenuItem>
+//           <MenuItem value="dept3">Department 3</MenuItem>
+//           {/* Add more departments as needed */}
 //         </Select>
 //       </FormControl>
-//       <div>
-//         <Typography variant="h6">Employees on Level 3</Typography>
-//         {employees
-//           .filter((employee) =>
-//             employee.skills?.some((skill) => skill.level === 3)
-//           )
-//           .map((employee) => (
-//             <p key={employee._id}>{employee["EMPLOYEE NAME"]}</p>
-//           ))}
-//       </div>
-//       <div>
-//         <Typography variant="h6">Employees on Level 4</Typography>
-//         {employees
-//           .filter((employee) =>
-//             employee.skills?.some((skill) => skill.level === 4)
-//           )
-//           .map((employee) => (
-//             <p key={employee._id}>{employee["EMPLOYEE NAME"]}</p>
-//           ))}
-//       </div>
+
+//       {generated ? (
+//         <div>
+//           <table>
+//             <thead>
+//               <tr>
+//                 <th>ID</th>
+//                 <th>Name</th>
+//                 <th colSpan={2}>Skills</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {userList.map((obj, count) => (
+//                 <tr key={count}>
+//                   <td>{count}</td>
+//                   <td>{obj["EMPLOYEE NAME"]}</td>
+//                   <td>
+//                     {obj.skills.map((skills, count) => {
+//                       if (
+//                         !skilltest.includes(skills.level) 
+//                       ) {
+//                         return (
+//                           <div key={count}>
+//                             {`${skills.skill}(${skills.level})`}
+//                           </div>
+//                         );
+//                       }
+//                       return null;
+//                     })}
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       ) : null}
 //     </div>
 //   );
 // }

@@ -23,31 +23,15 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
     tableData[index] = temp;
     setGeneratedData([...tableData]);
   };
+
   const handleApproval = async (userid, currentSkill, index, allSkills) => {
     let tempSkills = [...allSkills];
     tempSkills[index] = currentSkill;
-    
-    // Update local state immediately
-    setUserList(prevUserList => {
-      const updatedUserList = [...prevUserList];
-      const userIndex = updatedUserList.findIndex(user => user._id === userid);
-      if (userIndex !== -1) {
-        const updatedSkills = [...updatedUserList[userIndex].skills];
-        updatedSkills[index] = currentSkill;
-        updatedUserList[userIndex].skills = updatedSkills;
-      }
-      return updatedUserList;
-    });
-  
-    // Make API call to update user's skills
-    try {
-      await Axios.put(`http://localhost:4000/api/excels/updateUser/${userid}`, { skills: tempSkills });
-    } catch (error) {
-      console.error("Error updating skills:", error);
-    }
+    let response = await Axios.put(
+      `http://localhost:4000/api/excels/updateUser/${userid}`,
+      { skills: tempSkills }
+    );
   };
-  
-  
 
   const getSkillData = async () => {
     try {
@@ -179,7 +163,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
                   <td>{obj["EMPLOYEE NAME"]}</td>
                   <td>
                     {obj.skills.map((skills, count) => {
-                      if (!skilltest.includes(skills.level)) 
+                      if (!skilltest.includes(skills.level)) return <p>test</p>;
                       return (
                         <div key={count}>
                           {`${skills.skill}(${skills.level})`}
@@ -224,6 +208,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
 }
 
 let skilltest = [
+  "4.Can train others",
   "3.Can work independently",
   "2.Trained and can work under observation",
 ];
