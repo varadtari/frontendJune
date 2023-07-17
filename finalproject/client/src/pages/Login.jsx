@@ -21,13 +21,25 @@ const Login = () => {
       token: Math.random(10000000),
     },
     {
-      email: "admin@gmail.com",
+      email: "pragati.lotlikar@rosenberger.in",
+      password: "1234",
+      role: "trainer",
+      token: Math.random(10000000),
+    },
+    {
+      email: "janardan.velip@rosenberger.in",
+      password: "1234",
+      role: "trainer",
+      token: Math.random(10000000),
+    },
+    {
+      email: "manager@rosenberger.in",
       password: "1234",
       role: "manager",
       token: Math.random(10000000),
     },
     {
-      email: "pcce@gmail.com",
+      email: "superviser@rosenberger.in",
       password: "1234",
       role: "supervisor",
       token: Math.random(10000000),

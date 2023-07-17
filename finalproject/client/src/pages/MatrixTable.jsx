@@ -8,7 +8,6 @@ import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 
 export default function MatrixTable({ tableData, setGeneratedData }) {
-
   const Navigate = useNavigate();
 
   const handleSkillFormClick = () => {
@@ -17,6 +16,7 @@ export default function MatrixTable({ tableData, setGeneratedData }) {
 
   const [skillList, setSkillList] = useState([]);
   const [searchByNameQuery, setSearchByNameQuery] = useState("");
+  const [searchBySkillQuery, setSearchBySkillQuery] = useState("");
 
   const handleSkill = (skill, index) => {
     let temp = { ...tableData[index], skills: skill };
@@ -35,44 +35,64 @@ export default function MatrixTable({ tableData, setGeneratedData }) {
 
   return (
     <div>
-      <br />  <br />
+      <br /> <br />
       <Container maxWidth="" style={{ marginBottom: "15px" }}>
-
         <Typography
           style={{
             backgroundColor: "white",
             border: "1px solid black",
-
           }}
         >
-          <input
-            style={{height:"38px"}}
-            type="text"
-            value={searchByNameQuery}
-            onChange={(e) => setSearchByNameQuery(e.target.value)}
-            placeholder="Search by employee name..."
-          />
+          <div>
+            <input
+              style={{ height: "38px", marginRight: "10px" }}
+              type="text"
+              value={searchByNameQuery}
+              onChange={(e) => setSearchByNameQuery(e.target.value)}
+              placeholder="Search by employee name..."
+            />
+            <input
+              style={{ height: "38px" }}
+              type="text"
+              value={searchBySkillQuery}
+              onChange={(e) => setSearchBySkillQuery(e.target.value)}
+              placeholder="Search by skill name..."
+            />
+          </div>
 
-          <button style={{
-            background: "#a4afec",
-            color: "black", position: "absolute",
-            
-        
-           
-            marginRight: "620px",
-            right: "2px",
-          }} onClick={handleSkillFormClick} className="btn my-6">
+          <button
+            style={{
+              background: "#a4afec",
+              color: "black",
+              position: "absolute",
+              marginRight: "620px",
+              marginTop:"-38px",
+              right: "2px",
+            }}
+            onClick={handleSkillFormClick}
+            className="btn my-6"
+          >
             Skill Form
           </button>
-          <table >
+          <table>
             <thead>
               <tr>
                 <th style={{ width: "8%", height: "60px" }}>&nbsp; Sr No</th>
-                <th style={{ width: "10%", height: "60px" }}>&nbsp;Joining Date</th>
-                <th style={{ width: "20%", height: "60px" }}>&nbsp;Employee Name</th>
-                <th style={{ width: "8%", height: "60px" }}>&nbsp;&nbsp;Emp Code</th>
-                <th style={{ width: "12%", height: "60px" }}>&nbsp;Qualification</th>
-                <th style={{ width: "12%", height: "60px" }}>&nbsp;Department</th>
+                <th style={{ width: "10%", height: "60px" }}>
+                  &nbsp;Joining Date
+                </th>
+                <th style={{ width: "20%", height: "60px" }}>
+                  &nbsp;Employee Name
+                </th>
+                <th style={{ width: "8%", height: "60px" }}>
+                  &nbsp;&nbsp;Emp Code
+                </th>
+                <th style={{ width: "12%", height: "60px" }}>
+                  &nbsp;Qualification
+                </th>
+                <th style={{ width: "12%", height: "60px" }}>
+                  &nbsp;Department
+                </th>
                 <th style={{ width: "21%", height: "60px" }}>&nbsp;Skills</th>
               </tr>
             </thead>
@@ -85,6 +105,17 @@ export default function MatrixTable({ tableData, setGeneratedData }) {
                       .toLowerCase()
                       .includes(searchByNameQuery.toLowerCase())
                   )
+                  .filter((data) => {
+                    if (searchBySkillQuery === "") return true;
+                    return (
+                      data.skills &&
+                      data.skills.some((skill) =>
+                        skill.skill
+                          .toLowerCase()
+                          .includes(searchBySkillQuery.toLowerCase())
+                      )
+                    );
+                  })
                   .map((data, index) => (
                     <MatrixTableRow
                       data={data}
@@ -150,11 +181,11 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
       <tr key={index}>
         <td>{index + 1}</td>
         <td>{data.DOJ}</td>
-        <td >{data["EMPLOYEE NAME"]}</td>
+        <td>{data["EMPLOYEE NAME"]}</td>
         <td>{data["EMP CODE"]}</td>
         <td>{data["EDUCATION"]}</td>
         <td>{data["Dept"]}</td>
-        <td >
+        <td>
           {data?.skills?.length ? (
             data.skills?.map((skill) => (
               <p>
@@ -165,7 +196,7 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
             <p>No Skills</p>
           )}
         </td>
-        <td >
+        <td>
           <button
             style={{
               height: "42px",
