@@ -145,7 +145,7 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
         { skill: selectedSkill, level: selectedLevel },
       ];
       let response = await Axios.put(
-        `http://localhost:4000/api/excels/updateUser/${data._id}`,
+        `http://localhost:4000/api/excels/updateUser4/${data._id}`,
         {
           skills: tempSkills,
         }
@@ -169,7 +169,7 @@ function MatrixTableRow({ data, index, handleSkill, skillList }) {
     let tempSkills = [...data.skills];
     tempSkills[currentIndex].level = skills.level;
     let response = await Axios.put(
-      `http://localhost:4000/api/excels/updateUser/${data._id}`,
+      `http://localhost:4000/api/excels/updateUser4/${data._id}`,
       { skills: tempSkills }
     );
 

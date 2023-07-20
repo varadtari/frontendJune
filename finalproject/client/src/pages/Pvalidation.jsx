@@ -6,6 +6,7 @@ import { Button, Space } from "antd";
 import { add } from "date-fns";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { isTrainer } from "../App";
+import is from "date-fns/esm/locale/is/index.js";
 
 export default function Pvalidation({ tableData, setGeneratedData, data }) {
   const [date, setDate] = useState({
@@ -28,9 +29,10 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
     let tempSkills = [...allSkills];
     tempSkills[index] = currentSkill;
     let response = await Axios.put(
-      `http://localhost:4000/api/excels/updateUser/${userid}`,
+      `http://localhost:4000/api/excels/updateUser4/${userid}`,
       { skills: tempSkills }
     );
+    generate();
   };
 
   const getSkillData = async () => {
@@ -46,42 +48,55 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
   const [isSecondCheckboxChecked, setIsSecondCheckboxChecked] = useState([]);
 
   useEffect(() => {
-    setIsChecked(getCheckedState("isChecked"));
-    setIsSecondCheckboxChecked(getCheckedState("isSecondCheckboxChecked"));
+    // const savedState = localStorage.getItem('checkboxState');
+    // if (savedState) {
+    //   const { isChecked, isSecondCheckboxChecked } = JSON.parse(savedState);
+    //   setIsChecked(isChecked);
+    //   setIsSecondCheckboxChecked(isSecondCheckboxChecked);
+    // }
+    setIsChecked(isChecked);
+    setIsSecondCheckboxChecked(isSecondCheckboxChecked);
   }, []);
 
-  useEffect(() => {
-    saveCheckedState("isChecked", isChecked);
-    saveCheckedState("isSecondCheckboxChecked", isSecondCheckboxChecked);
-  }, [isChecked, isSecondCheckboxChecked]);
+  // useEffect(() => {
+  //   const stateToSave = JSON.stringify({
+  //     isChecked,
+  //     isSecondCheckboxChecked
+  //   });
+  //   localStorage.setItem('checkboxState', stateToSave);
+  // }, [isChecked, isSecondCheckboxChecked]);
 
-  const getCheckedState = (key) => {
-    const savedState = localStorage.getItem(key);
-    return savedState ? JSON.parse(savedState) : [];
-  };
+  
 
-  const saveCheckedState = (key, state) => {
-    const stateToSave = JSON.stringify(state);
-    localStorage.setItem(key, stateToSave);
-  };
+
+
 
   const handleCheckboxChange = (id) => {
-    if (isChecked.includes(id)) {
-      let data = isChecked.filter(item => item !== id);
-      setIsChecked(data);
-    } else {
-      setIsChecked([...isChecked, id]);
-    }
+    console.log("checu",isChecked);
+   // !isChecked? setIsChecked(id):setIsChecked("");
+   if(isChecked.includes(id)){
+    let data= isChecked.filter(item=> id!=item)
+    setIsChecked(data);
+   }
+   else{
+    setIsChecked([...isChecked,id]);
+   }
+   console.log("checuu",isChecked);
   };
 
   const handleSecondCheckboxChange = (id) => {
-    if (isSecondCheckboxChecked.includes(id)) {
-      let data2 = isSecondCheckboxChecked.filter(item => item !== id);
+    // !isSecondCheckboxChecked? setIsSecondCheckboxChecked(id):setIsSecondCheckboxChecked("");
+    if(isSecondCheckboxChecked.includes(id)){
+      let data2= isSecondCheckboxChecked.filter(item=> id!=item)
       setIsSecondCheckboxChecked(data2);
-    } else {
-      setIsSecondCheckboxChecked([...isSecondCheckboxChecked, id]);
-    }
+     }
+     else{
+      setIsSecondCheckboxChecked([...isSecondCheckboxChecked,id]);
+     }
   };
+
+ 
+
 
   async function generate() {
     try {
@@ -103,6 +118,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
       });
 
       setUserList(userData);
+      localStorage.setItem("userList", JSON.stringify(userData));
       setLoading(false);
       setGenerated(true);
     } catch (error) {
@@ -110,19 +126,39 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
       setLoading(false);
     }
   }
-
   useEffect(() => {
-    getSkillData();
-  }, []);
+    //  generate();
+    setIsChecked(isChecked);
+    setIsSecondCheckboxChecked(isSecondCheckboxChecked);
+      getSkillData();
+    }, []);
+  async function handleSValidation(e, user) {
+    try {
+      const updatedUser = {
+        ...user,
+        readyForValidationTemp: e.target.checked,
+      };
+
+      setUserList((prevUserList) => {
+        const updatedUserList = prevUserList.map((obj) =>
+          obj._id === user._id ? updatedUser : obj
+        );
+        localStorage.setItem("userList", JSON.stringify(updatedUserList));
+        return updatedUserList;
+      });
+    } catch (error) {
+      console.error("error", error);
+    }
+
+
+  }
 
   return (
     <div>
       <div className="calender">
-        <h2 style={{background: '-webkit-linear-gradient(left, blue, red)', WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent', fontWeight: "bold"}}>Validation</h2>
         <div className="d-flex">
           <div>
-            <p>From Date</p>
+            <p>from date</p>
             <input
               type="date"
               onChange={(e) => setDate({ ...date, startDate: e.target.value })}
@@ -131,7 +167,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
             />
           </div>
           <div>
-            <p>End Date</p>
+            <p>end date</p>
             <input
               disabled={!date.startDate}
               onChange={(e) => setDate({ ...date, endDate: e.target.value })}
@@ -140,6 +176,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
               value={date.endDate}
             />
           </div>
+
         </div>
         <button className="mt-4" onClick={generate} disabled={loading}>
           {loading ? "Generating..." : generated ? "Generated" : "Generate"}
@@ -148,6 +185,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
 
       {generated ? (
         <div>
+          <h2>Validation</h2>
           <table>
             <thead>
               <tr>
@@ -170,16 +208,18 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
                           <input
                             type="checkbox"
                             checked={skills.approve}
+                            // disabled={obj.approve}
                             onChange={(e) => {
                               handleApproval(
                                 obj._id,
                                 { ...skills, approve: e.target.checked },
                                 count,
                                 obj.skills
-                              );
+                              ); handleCheckboxChange(obj._id+skills.level);
                             }}
                           />
                           {skills.approve && (
+
                             <input
                               type="checkbox"
                               checked={skills.approve2}
@@ -189,10 +229,13 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
                                   { ...skills, approve2: e.target.checked },
                                   count,
                                   obj.skills
-                                );
+                                ); handleSecondCheckboxChange(obj._id+skills.level);
                               }}
                             />
+
+
                           )}
+                          
                         </div>
                       );
                     })}
@@ -211,6 +254,4 @@ let skilltest = [
   "4.Can train others",
   "3.Can work independently",
   "2.Trained and can work under observation",
-];
-
-export { Pvalidation };
+]
