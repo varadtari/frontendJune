@@ -39,7 +39,7 @@ const Login = () => {
       token: Math.random(10000000),
     },
     {
-      email: "superviser@rosenberger.in",
+      email: "supervisor@rosenberger.in",
       password: "1234",
       role: "supervisor",
       token: Math.random(10000000),

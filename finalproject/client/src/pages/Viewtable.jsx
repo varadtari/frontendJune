@@ -1,40 +1,60 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
+import MaterialTable from "material-table";
+import React, { useState } from 'react';
+import Axios from "axios";
+
 
 export default function Viewtable({ tableData }) {
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [viewData, setViewData] = useState(tableData);
+  const columns = [
+    { title: "Participant", field: "EMPLOYEE NAME" },
+    { title: "Area of Operation", field: "Dept" },
+    { title: "Contractor", field: "CONTRACTOR" },
+    { title: "Date", field: "DOJ" },
+    { title: "Trainer Name and Signature", field: "TRAINER" },
+  ];
+
+  const handleBulkDelete = async () => {
+    try {
+      const updatedData = viewData.filter(row => !selectedRows.includes(row));
+
+      // Replace 'YOUR_API_ENDPOINT' with the actual endpoint to handle the delete operation on the server side
+      const deletePromises = selectedRows.map(row => Axios.delete(`http://localhost:4000/api/excels/${row._id}`));
+
+      // Wait for all the delete promises to complete
+      await Promise.all(deletePromises);
+
+      setViewData(updatedData);
+      setSelectedRows([]);
+      
+      console.log("Selected entries successfully deleted from the database.");
+    } catch (error) {
+      console.error("Error deleting selected entries:", error.message);
+      // Handle error scenarios if necessary
+    }
+    
+  };
+
   return (
     <div>
-      <br/><br/>
-      <Container maxWidth="">
-        <Typography 
-          style={{
-            backgroundColor: "white",
-            border: "1px solid black",
-          }}
-        >
-          
-          <table>
-            <tr>
-              <th>Participant</th>
-              <th>Area of Operation</th>
-              <th>Employee Signature</th>
-              <th>Date</th>
-              <th>Trainer Name and Signature</th>
-            </tr>
-            {tableData &&
-              tableData.map((data) => (
-                <tr>
-                  <td>{data["EMPLOYEE NAME"]}</td>
-                  <td>{data.Dept}</td>
-                  <td>{data["EMPLOYEE NAME"]}</td>
-                  <td>{data.DOJ}</td>
-                  <td>{data["TRAINER"]}</td>
-                </tr>
-              ))}
-          </table>
-        </Typography>
-      </Container>
+      <br /><br />
+      <MaterialTable
+        title="Table Data"
+        columns={columns}
+        data={viewData}
+        onSelectionChange={(rows) => setSelectedRows(rows)}
+        options={{
+          filtering: true,
+          selection: true
+        }}
+        actions={[
+          {
+            icon: 'delete',
+            tooltip: "Delete all selected rows",
+            onClick: () => handleBulkDelete()
+          }
+        ]}
+      />
     </div>
   );
 }

@@ -50,7 +50,7 @@ const View = () => {
         }}>&nbsp;&nbsp;&nbsp;VIEW</h2>
       <div className="d-flex">
         <div>
-          <p>from date</p>
+          <p>From Date</p>
           <input
             type="date"
             onChange={(e) => setDate({ ...date, startDate: e.target.value })}
@@ -59,7 +59,7 @@ const View = () => {
           />
         </div>
         <div>
-          <p>end date</p>
+          <p>End Date</p>
           <input
             disabled={!date.startDate}
             onChange={(e) => setDate({ ...date, endDate: e.target.value })}

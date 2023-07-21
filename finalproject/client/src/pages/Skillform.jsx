@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Axios from "axios";
 
 const SkillForm = () => {
   const [skillName, setSkillName] = useState('');
   const [dept, setDept] = useState('');
+  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    // Fetch the departments from the Excel model in the backend
+    Axios.get('http://localhost:4000/api/excels/departments') // Replace with your backend endpoint
+      .then((response) => {
+        // Extract unique department names from the response
+
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching departments:', error);
+      });
+  }, []);
+  useEffect(() => {
+    console.log('Departments:', departments);
+  }, [departments]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -114,14 +130,20 @@ const SkillForm = () => {
           <label htmlFor="dept" style={styles.label}>
             Department:
           </label>
-          <input
-            type="text"
+          <select
             id="dept"
             value={dept}
             onChange={(event) => setDept(event.target.value)}
             required
             style={styles.input}
-          />
+          >
+            <option value="">Select a department</option>
+            {departments.map((department, index) => (
+              <option key={index} value={department}>
+                {department}
+              </option>
+            ))}
+          </select>
         </div>
 
         <button type="submit" style={styles.button}>

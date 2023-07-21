@@ -1,164 +1,102 @@
-// import React, { useEffect, useState } from "react";
-// import Axios from "axios";
+// import React, { useState, useEffect } from 'react';
+// import MaterialTable from 'material-table';
 
-// import {
-//   FormControl,
-//   InputLabel,
-//   MenuItem,
-//   Select,
-//   Typography,
-// } from "@material-ui/core";
-
-// export default function Skillwise() {
-//   const [date, setDate] = useState({
-//     startDate: "",
-//     endDate: "",
-//   });
-//   const [userList, setUserList] = useState([]);
-//   const [generated, setGenerated] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [skillList, setSkillList] = useState([]);
-//   const [selectedDepartment, setSelectedDepartment] = useState("");
-//   const [employees, setEmployees] = useState([]);
-//   let skilltest = [
-//     "4.Can train others",
-//     "3.Can work independently",
-//     "2.Trained and can work under observation",
-//   ];
+// function Skillwise() {
+//   const [columns, setColumns] = useState([]);
+//   const [data, setData] = useState([]);
+//   const [totalRows, setTotalRows] = useState(0);
 
 //   useEffect(() => {
-//     getSkillData();
+//     fetchColumnsFromApi(); // Fetch columns from API when the component mounts
+//     fetchData(); // Fetch initial data when the component mounts
 //   }, []);
 
-//   const getSkillData = async () => {
-//     try {
-//       const response = await Axios.get("http://localhost:4000/api/skills");
-//       setSkillList(response.data.data);
-//     } catch (error) {
-//       console.error("Error fetching skill data:", error);
-//     }
-//   };
-
-//   const handleDepartmentChange = (event) => {
-//     setSelectedDepartment(event.target.value);
-//   };
-
-//   async function generate() {
-//     try {
-//       setLoading(true);
-//       let response = await Axios.get(
-//         `http://localhost:4000/api/excels/filter?${date.startDate &&
-//           date.endDate &&
-//           `fromDate=${date.startDate}&toDate=${date.endDate}`}`
-//       );
-
-//       let userData = response.data.data;
-//       userData = userData.filter((item) => {
-//         let count = 0;
-//         item.skills.forEach((skill) => {
-//           if (
-//             skilltest.includes(skill.level) &&
-//             skill.skillId === selectedDepartment
-//           ) {
-//             count += 1;
-//           }
-//         });
-//         return count > 0;
+//   const fetchColumnsFromApi = () => {
+//     // Replace 'YOUR_API_ENDPOINT' with the actual endpoint to fetch columns from the API
+//     fetch("http://localhost:4000/api/excels/columns")
+//       .then(response => response.json())
+//       .then(columnsFromApi => {
+//         setColumns(columnsFromApi); // Update the 'columns' state with the API response
+//       })
+//       .catch(error => {
+//         console.error("Error fetching columns:", error);
+//         setColumns([]); // Set empty columns in case of an error
 //       });
+//   };
 
-//       setUserList(userData);
-//       setLoading(false);
-//       setGenerated(true);
-//     } catch (error) {
-//       console.error("Error generating data:", error);
-//       setLoading(false);
+//   const fetchData = (query = {}) => {
+//     // Construct the API endpoint URL with query parameters
+//     let url = 'http://localhost:4000/api/excels';
+  
+//     if (query.search) {
+//       url += `?q=${query.search}`;
 //     }
-//   }
-
+//     if (query.orderBy) {
+//       url += `&_sort=${query.orderBy.field}&_order=${query.orderDirection}`;
+//     }
+//     if (query.filters && query.filters.length) {
+//       const filter = query.filters.map(filter => {
+//         return `&${filter.column.field}${filter.operator}${filter.value}`;
+//       });
+//       url += filter.join('');
+//     }
+//     url += `&_page=${query.page + 1}`;
+//     url += `&_limit=${query.pageSize}`;
+  
+//     return fetch(url)
+//       .then(resp => resp.json())
+//       .then(responseData => {
+//         if (Array.isArray(responseData)) {
+//           // Assuming the response data is an array of objects
+//           setData(responseData);
+//           setTotalRows(499); // Assuming you know the total number of rows from the API response
+//           return { data: responseData, page: query.page, totalCount: 499 };
+//         } else {
+//           // If the API response is not as expected (e.g., not an array)
+//           console.error("Invalid API response:", responseData);
+//           setData([]); // Set empty data in case of an error
+//           setTotalRows(0);
+//           return { data: [], page: query.page, totalCount: 0 };
+//         }
+//       })
+//       .catch(error => {
+//         console.error("Error fetching data:", error);
+//         setData([]); // Set empty data in case of an error
+//         setTotalRows(0);
+//         return { data: [], page: query.page, totalCount: 0 };
+//       });
+//   };
+  
 //   return (
-//     <div>
-//       <div className="calender">
-//         <h2
-//           style={{
-//             background: '-webkit-linear-gradient(left, blue, red)',
-//             WebkitBackgroundClip: 'text',
-//             WebkitTextFillColor: 'transparent',
-//             fontWeight: "bold"
-//           }}
-//         >
-//           Validation
-//         </h2>
-//         <div className="d-flex">
-//           <div>
-//             <p>from date</p>
-//             <input
-//               type="date"
-//               onChange={(e) => setDate({ ...date, startDate: e.target.value })}
-//               max={date.endDate}
-//               value={date.startDate}
-//             />
-//           </div>
-//           <div>
-//             <p>end date</p>
-//             <input
-//               disabled={!date.startDate}
-//               onChange={(e) => setDate({ ...date, endDate: e.target.value })}
-//               type="date"
-//               min={date.startDate}
-//               value={date.endDate}
-//             />
-//           </div>
-//         </div>
-//         <button className="mt-4" onClick={generate} disabled={loading}>
-//           {loading ? "Generating..." : generated ? "Generated" : "Generate"}
-//         </button>
-//       </div>
-
-//       <FormControl>
-//         <InputLabel>Select Department</InputLabel>
-//         <Select value={selectedDepartment} onChange={handleDepartmentChange}>
-//           <MenuItem value="dept1">FO</MenuItem>
-//           <MenuItem value="dept2">Department 2</MenuItem>
-//           <MenuItem value="dept3">Department 3</MenuItem>
-//           {/* Add more departments as needed */}
-//         </Select>
-//       </FormControl>
-
-//       {generated ? (
-//         <div>
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>ID</th>
-//                 <th>Name</th>
-//                 <th colSpan={2}>Skills</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {userList.map((obj, count) => (
-//                 <tr key={count}>
-//                   <td>{count}</td>
-//                   <td>{obj["EMPLOYEE NAME"]}</td>
-//                   <td>
-//                     {obj.skills.map((skills, count) => {
-//                       if (
-//                         !skilltest.includes(skills.level) 
-//                       ) {
-//                         return (
-//                           <div key={count}>
-//                             {`${skills.skill}(${skills.level})`}
-//                           </div>
-//                         );
-//                       }
-//                       return null;
-//                     })}
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       ) : null}
+//     <div className="App">
+//       <h1 align="center">React-App</h1>
+//       <h4 align='center'>Implement Server-Side Pagination, Filter, Search, and Sorting in Material Table</h4>
+//       {columns.length > 0 ? (
+//         <MaterialTable
+//           title="Olympic Data"
+//           columns={columns.map(column => {
+//             // Add a custom render function for specific headers
+//             if (column.field === 'EMPLOYEE NAME' || column.field === 'FATHER NAME') {
+//               return {
+//                 ...column,
+//                 render: rowData => <span>{rowData[column.field].toUpperCase()}</span>,
+//               };
+//             }
+//             return column;
+//           })}
+//           options={{ debounceInterval: 700, padding: "dense", filtering: true }}
+//           data={(query) =>
+//             new Promise((resolve, reject) => {
+//               fetchData(query).then(resolve);
+//             })
+//           }
+//           totalCount={totalRows}
+//         />
+//       ) : (
+//         <div>Loading...</div>
+//       )}
 //     </div>
 //   );
 // }
+
+// export default Skillwise;
