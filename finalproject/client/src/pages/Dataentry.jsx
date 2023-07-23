@@ -65,6 +65,25 @@ function Dataentry() {
       // console.log(fileData)
       const headers = fileData[0];
 
+     // Check if the headers are in the expected format
+    const expectedHeaders = [
+      "SL NO",
+      "DOJ",
+      "EMP CODE",
+      "EMPLOYEE NAME",
+      "FATHER NAME",
+      "EDUCATION",
+      "Dept",
+      "CONTRACTOR",
+      "TRAINER",
+    ];
+    if (!headers.every((header, index) => header === expectedHeaders[index])) {
+      alert("Please check the Excel headers. They should be in the expected format.");
+      setData([]);
+      setColDefs([]);
+      return;
+    }
+
 
       const heads = headers.map((head) => ({ title: head, field: head }));
       setColDefs(heads);
@@ -73,6 +92,23 @@ function Dataentry() {
 
       //removing header
       fileData.splice(0,1);
+      const isDataInCapitalCase = fileData.every((row) =>
+      row.every((value) => {
+        // Check if the value is a string and in capital case (all uppercase)
+        if (typeof value === "string") {
+          return value === value.toUpperCase();
+        }
+        // For number values, we don't need to check, so return true
+        return true;
+      })
+    );
+
+    if (!isDataInCapitalCase) {
+      alert("All values should be in capital case (all uppercase) except for headers.");
+      setData([]);
+      setColDefs([]);
+      return;
+    }
       finalData = convertToJson(headers, fileData);
       console.log("data 6", finalData);
       finalData = finalData.map((dataOne) => {

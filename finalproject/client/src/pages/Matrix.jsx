@@ -92,7 +92,7 @@ const Matrix = () => {
           name="designation"
           onChange={(e) => setDept(e.target.value)}
         >
-         <option value="">Select a department</option>
+         <option value="">Select a Department</option>
             {departments.map((department, index) => (
               <option key={index} value={department}>
                 {department}
@@ -100,6 +100,7 @@ const Matrix = () => {
             ))}
         </select>
       </div>
+      
       <button className="mt-4" disabled={loading} onClick={generate}>
         {generated ? "Generated" : "Generate"}
       </button>

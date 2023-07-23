@@ -7,8 +7,38 @@ import { add } from "date-fns";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { isTrainer } from "../App";
 import is from "date-fns/esm/locale/is/index.js";
+import { makeStyles } from "@material-ui/core/styles";
 
+
+
+const useStyles = makeStyles((theme) => ({
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginBottom: theme.spacing(2),
+    "& th, td": {
+      border: "1px solid #ddd",
+      padding: theme.spacing(1),
+      textAlign: "left",
+    },
+    "& th": {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      fontWeight: "bold",
+    },
+    "& tr:nth-child(even)": {
+      backgroundColor: "#f2f2f2",
+    },
+    "& tr:hover": {
+      backgroundColor: "#f5f5f5",
+    },
+  },
+  generatedButton: {
+    marginTop: theme.spacing(4),
+  },
+}));
 export default function Pvalidation({ tableData, setGeneratedData, data }) {
+  const classes = useStyles();
   const [date, setDate] = useState({
     startDate: "",
     endDate: "",
@@ -95,7 +125,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
      }
   };
 
- 
+
 
 
   async function generate() {
@@ -176,6 +206,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
               value={date.endDate}
             />
           </div>
+          
 
         </div>
         <button className="mt-4" onClick={generate} disabled={loading}>
@@ -186,7 +217,7 @@ export default function Pvalidation({ tableData, setGeneratedData, data }) {
       {generated ? (
         <div>
           <h2>Validation</h2>
-          <table>
+          <table className={classes.table} >
             <thead>
               <tr>
                 <th>ID</th>

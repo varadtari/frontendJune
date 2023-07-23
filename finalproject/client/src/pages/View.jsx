@@ -16,6 +16,21 @@ const View = () => {
     startDate: "",
     endDate: "",
   });
+
+  const [departments, setDepartments] = React.useState([]);
+  React.useEffect(() => {
+    // Fetch the departments from the Excel model in the backend
+    Axios.get('http://localhost:4000/api/excels/departments') // Replace with your backend endpoint
+      .then((response) => {
+        // Extract unique department names from the response
+
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching departments:', error);
+      });
+  }, []);
+
   const [generatedData, setGeneratedData] = React.useState([]);
   async function generate() {
     try {
@@ -37,6 +52,7 @@ const View = () => {
       setGenerated(true);
     } catch (error) {}
   }
+
   return (
     
       
@@ -70,15 +86,19 @@ const View = () => {
         </div>
       </div>
       <div>
-        <p>dept</p>
+        <br />
+        <p>Dept</p>
         <select
           id="selectsuccess"
           className="box"
           name="designation"
           onChange={(e) => setDept(e.target.value)}
         >
-          {options.map((option) => (
-            <option value={option.value}>{option.show}</option>
+          <option value="">Select a Department</option>
+            {departments.map((department, index) => (
+              <option key={index} value={department}>
+                {department}
+              </option>
           ))}
         </select>
       </div>
@@ -86,7 +106,7 @@ const View = () => {
         {generated ? "Generated" : "Generate"}
       </button>
       {generated && generatedData ? (
-        <Viewtable tableData={generatedData} />
+        <Viewtable tableData={generatedData}generate={generate} />
       ) : null}
     </div>
   );

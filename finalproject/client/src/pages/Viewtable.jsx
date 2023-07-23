@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Axios from "axios";
 
 
-export default function Viewtable({ tableData }) {
+export default function Viewtable({ tableData ,generate}) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [viewData, setViewData] = useState(tableData);
   const columns = [
@@ -25,6 +25,7 @@ export default function Viewtable({ tableData }) {
       await Promise.all(deletePromises);
 
       setViewData(updatedData);
+     await generate();
       setSelectedRows([]);
       
       console.log("Selected entries successfully deleted from the database.");
@@ -41,7 +42,7 @@ export default function Viewtable({ tableData }) {
       <MaterialTable
         title="Table Data"
         columns={columns}
-        data={viewData}
+        data={tableData}
         onSelectionChange={(rows) => setSelectedRows(rows)}
         options={{
           filtering: true,

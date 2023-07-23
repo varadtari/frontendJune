@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState ,useEffect} from "react";
 import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,17 +10,33 @@ import DisplayTable from "./DisplayTable";
 import { useParams } from "react-router-dom";
 import "./Induction.css"
 
-const Induction = () => {
+ const Induction = () => {
   const {dept:department}=useParams()
   const [dept, setDept] = React.useState(department=="induction"?"":department);
   const [loading, setLoading] = React.useState("");
   const [generated, setGenerated] = React.useState(false);
+  const [generatedData, setGeneratedData] = React.useState([]);
   const [date, setDate] = React.useState({
     startDate: "",
     endDate: "",
   });
-  const [generatedData, setGeneratedData] = React.useState([]);
-  async function generate() {
+  const [dataGeneratedByFilter, setDataGeneratedByFilter] = React.useState(false); // New state variable
+  const [departments, setDepartments] = React.useState([]);
+  
+  React.useEffect(() => {
+    // Fetch the departments from the Excel model in the backend
+    Axios.get('http://localhost:4000/api/excels/departments') // Replace with your backend endpoint
+      .then((response) => {
+        // Extract unique department names from the response
+
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching departments:', error);
+      });
+  }, []);
+  const generate=async()=> {
+    
     try {
       setLoading(true);
       let response = await Axios.get(
@@ -34,12 +50,20 @@ const Induction = () => {
         setLoading(false);
         return;
       }
-
+  
       setLoading(false);
       setGeneratedData(response.data.data);
       setGenerated(true);
+      setDataGeneratedByFilter(true);
     } catch (error) {}
-  }
+   
+ }
+ useEffect(() => {
+  // Fetch the format number from the backend API
+ //generate();
+}, []);
+
+
   return (
     <div className="calender">
       <div className="d-flex">
@@ -63,24 +87,29 @@ const Induction = () => {
           />
         </div>
       </div>
-      {/* <div>
-        <p>dept</p>
+      <div>
+      <br />
+        <p>Dept</p>
         <select
           id="selectsuccess"
           className="box"
           name="designation"
           onChange={(e) => setDept(e.target.value)}
         >
-          {options.map((option) => (
-            <option value={option.value}>{option.show}</option>
+          <option value="">Select a Department</option>
+            {departments.map((department, index) => (
+              <option key={index} value={department}>
+                {department}
+              </option>
           ))}
         </select>
-      </div> */}
+      </div>
       <button className="mt-4" disabled={loading} onClick={generate}>
         {generated ? "Generated" : "Generate"}
       </button>
       {generated && generatedData ? (
-        <DisplayTable tableData={generatedData} title={process.env.PUBLIC_URL + images[department]} />
+        <DisplayTable tableData={generatedData} date={date} fromDate={date.startDate} // Pass the fromDate as a prop
+        toDate={date.endDate} dataGeneratedByFilter={dataGeneratedByFilter}  generate={generate} title={process.env.PUBLIC_URL + images[department]} />
       ) : null}
     </div>
   );
@@ -105,4 +134,5 @@ const images= {
 
 
 }
+
 export default Induction;
